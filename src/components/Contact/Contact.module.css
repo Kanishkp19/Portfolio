@@ -280,3 +280,74 @@
     transform: translateY(-4px);
   }
 }
+
+@media (max-width: 768px) {
+  .section {
+    min-height: auto;
+    padding: var(--sp-3xl) 0;
+  }
+
+  .heading {
+    font-size: clamp(28px, 7vw, 40px);
+    margin-bottom: var(--sp-lg);
+  }
+
+  .cgpaBlock {
+    margin-bottom: var(--sp-2xl);
+    padding: var(--sp-md);
+  }
+
+  .cgpaValue {
+    font-size: var(--fs-2xl);
+  }
+
+  .socialHeading {
+    font-size: var(--fs-lg);
+  }
+
+  .socialSub {
+    margin-bottom: var(--sp-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--sp-2xl) var(--section-px);
+  }
+
+  .grid {
+    gap: var(--sp-3xl);
+  }
+
+  .overline {
+    font-size: 10px;
+  }
+
+  .heading {
+    font-size: clamp(24px, 9vw, 36px);
+  }
+
+  .cgpaLabel {
+    font-size: 10px;
+  }
+
+  .cgpaValue {
+    font-size: var(--fs-xl);
+  }
+
+  .cgpaSub {
+    font-size: var(--fs-xs);
+  }
+
+  .contactCard {
+    padding: var(--sp-md);
+  }
+
+  .cardPrompt {
+    font-size: var(--fs-sm);
+  }
+
+  .cardArrow {
+    font-size: 10px;
+  }
+}

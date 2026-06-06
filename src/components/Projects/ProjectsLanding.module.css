@@ -28,3 +28,33 @@
   color: var(--c-white);
   mix-blend-mode: difference;
 }
+
+@media (max-width: 768px) {
+  .section {
+    min-height: 45vh;
+    padding: 40px var(--section-px);
+  }
+
+  .getStarted {
+    font-size: var(--fs-lg);
+  }
+
+  .heading {
+    font-size: clamp(48px, 15vw, 100px);
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    min-height: 40vh;
+    padding: 30px var(--section-px);
+  }
+
+  .getStarted {
+    font-size: var(--fs-base);
+  }
+
+  .heading {
+    font-size: clamp(36px, 18vw, 80px);
+  }
+}

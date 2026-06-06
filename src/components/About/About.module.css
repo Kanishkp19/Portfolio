@@ -279,8 +279,71 @@
   }
 }
 
+@media (max-width: 768px) {
+  .section {
+    padding: var(--sp-3xl) 0;
+  }
+
+  .heading {
+    font-size: clamp(28px, 7vw, 44px);
+    margin-bottom: var(--sp-lg);
+  }
+
+  .bioContainer {
+    margin-bottom: var(--sp-2xl);
+  }
+
+  .bioText {
+    font-size: var(--fs-base);
+  }
+
+  .categoriesList {
+    gap: var(--sp-xl);
+  }
+}
+
 @media (max-width: 640px) {
   .statsGrid {
     grid-template-columns: 1fr;
+  }
+
+  .statCard {
+    padding: var(--sp-md);
+  }
+
+  .statValue {
+    font-size: var(--fs-3xl);
+  }
+
+  .pillsGrid {
+    gap: var(--sp-xs);
+  }
+
+  .pill {
+    font-size: var(--fs-xs);
+    padding: 6px 12px;
+  }
+
+  .pillIcon {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .overline {
+    font-size: 10px;
+  }
+
+  .bioText {
+    font-size: var(--fs-sm);
+  }
+
+  .skillsHeading {
+    font-size: var(--fs-lg);
+  }
+
+  .catName {
+    font-size: var(--fs-sm);
   }
 }

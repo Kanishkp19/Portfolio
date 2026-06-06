@@ -232,4 +232,50 @@
   .sectionTicker {
     margin-bottom: var(--sp-2xl);
   }
+
+  .section {
+    padding: 0 0 var(--sp-3xl) 0;
+  }
+
+  .heading {
+    font-size: clamp(28px, 7vw, 44px);
+  }
+
+  .rowsContainer {
+    gap: var(--sp-2xl);
+  }
+
+  .row {
+    padding-bottom: var(--sp-2xl);
+  }
+
+  .roleTitle {
+    font-size: var(--fs-lg);
+  }
+
+  .appBlock {
+    margin-top: var(--sp-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .compName {
+    font-size: var(--fs-sm);
+  }
+
+  .roleTitle {
+    font-size: var(--fs-base);
+  }
+
+  .summaryText {
+    font-size: var(--fs-sm);
+  }
+
+  .bulletItem {
+    font-size: var(--fs-sm);
+  }
+
+  .appDesc {
+    font-size: 10px;
+  }
 }

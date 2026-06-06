@@ -196,4 +196,76 @@
   .card:hover {
     transform: translateY(-4px);
   }
+
+  .art {
+    width: 100%;
+    opacity: 0.3;
+  }
+
+  .circle {
+    width: 350px;
+    height: 350px;
+  }
+
+  .glow {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--sp-3xl) 0;
+  }
+
+  .heading {
+    font-size: clamp(28px, 7vw, 44px);
+  }
+
+  .desc {
+    font-size: var(--fs-base);
+  }
+
+  .btnRow {
+    gap: var(--sp-sm);
+  }
+
+  .cardsStack {
+    gap: var(--sp-sm);
+  }
+
+  .card {
+    padding: var(--sp-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .overline {
+    font-size: 10px;
+  }
+
+  .heading {
+    font-size: clamp(24px, 9vw, 36px);
+    margin-bottom: var(--sp-md);
+  }
+
+  .desc {
+    font-size: var(--fs-sm);
+  }
+
+  .descWrapper {
+    margin-bottom: var(--sp-lg);
+  }
+
+  .cardValue {
+    font-size: var(--fs-lg);
+  }
+
+  .cardSub {
+    font-size: var(--fs-xs);
+  }
+
+  .art {
+    display: none;
+  }
 }
