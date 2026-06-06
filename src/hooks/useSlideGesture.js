@@ -74,7 +74,7 @@ export function useSlideGesture(onNext, onPrev, threshold = 60) {
     
     const dx = currentX.current - startX.current;
     const dy = currentY.current - startY.current;
-    const effectiveThreshold = isMobileDevice.current ? 80 : threshold;
+    const effectiveThreshold = isMobileDevice.current ? 100 : threshold;
 
     updateDebug(`🎯 SWIPE<br>dx=${dx.toFixed(0)}, dy=${dy.toFixed(0)}<br>Need: ${effectiveThreshold}px`);
 
@@ -85,8 +85,9 @@ export function useSlideGesture(onNext, onPrev, threshold = 60) {
       if (slideEl) {
         const { scrollTop, scrollHeight, clientHeight } = slideEl;
         const isScrollable = scrollHeight > clientHeight + 20;
-        const atBottom = scrollTop + clientHeight >= scrollHeight - 10;
-        const atTop = scrollTop <= 10;
+        const scrollTolerance = isMobileDevice.current ? 40 : 10;
+        const atBottom = scrollTop + clientHeight >= scrollHeight - scrollTolerance;
+        const atTop = scrollTop <= scrollTolerance;
         
         updateDebug(`📊 Scroll: ${scrollTop.toFixed(0)}/${scrollHeight.toFixed(0)}<br>Scrollable: ${isScrollable}<br>Top: ${atTop}, Bottom: ${atBottom}<br>dy: ${dy.toFixed(0)}`);
         

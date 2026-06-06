@@ -149,12 +149,15 @@ export default function App() {
 
         // If slide content is scrollable (greater than viewport height)
         if (scrollHeight - clientHeight > 10) {
+          // Increased tolerance on mobile to prevent accidental section switches
+          const scrollTolerance = window.innerWidth <= 768 ? 30 : 5;
+          
           // If scrolling down and haven't reached the bottom boundary
-          if (e.deltaY > 0 && scrollTop + clientHeight < scrollHeight - 5) {
+          if (e.deltaY > 0 && scrollTop + clientHeight < scrollHeight - scrollTolerance) {
             return; // Allow native scrolling of slide content
           }
           // If scrolling up and haven't reached the top boundary
-          if (e.deltaY < 0 && scrollTop > 5) {
+          if (e.deltaY < 0 && scrollTop > scrollTolerance) {
             return; // Allow native scrolling of slide content
           }
         }

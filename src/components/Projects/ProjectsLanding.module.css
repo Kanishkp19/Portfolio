@@ -1,5 +1,5 @@
 .section {
-  min-height: 55vh;
+  min-height: 85vh;
   background: var(--grad-split);
   display: flex;
   align-items: center;
@@ -31,7 +31,7 @@
 
 @media (max-width: 768px) {
   .section {
-    min-height: 45vh;
+    min-height: 70vh;
     padding: 40px var(--section-px);
   }
 
@@ -46,7 +46,7 @@
 
 @media (max-width: 480px) {
   .section {
-    min-height: 40vh;
+    min-height: 65vh;
     padding: 30px var(--section-px);
   }
 
