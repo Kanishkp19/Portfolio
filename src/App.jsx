@@ -220,7 +220,6 @@ export default function App() {
         ref={containerRef}
         className={styles.sliderContainer}
         {...gestureHandlers}
-        style={{ touchAction: 'none' }}
         aria-label="Portfolio sections"
       >
         <AnimatePresence initial={false} custom={direction} mode="sync">

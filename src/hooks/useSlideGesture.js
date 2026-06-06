@@ -11,8 +11,12 @@ export function useSlideGesture(onNext, onPrev, threshold = 60) {
   const startX = useRef(null);
   const startY = useRef(null);
   const isDragging = useRef(false);
+  const isMobile = useRef(window.innerWidth <= 768);
 
   const onPointerDown = useCallback((e) => {
+    // Update mobile detection on each interaction
+    isMobile.current = window.innerWidth <= 768;
+    
     startX.current = e.clientX ?? e.touches?.[0]?.clientX;
     startY.current = e.clientY ?? e.touches?.[0]?.clientY;
     isDragging.current = true;
@@ -27,6 +31,9 @@ export function useSlideGesture(onNext, onPrev, threshold = 60) {
     const dx = endX - startX.current;
     const dy = endY - startY.current;
 
+    // On mobile, require stronger swipe gesture to change slides
+    const mobileThreshold = isMobile.current ? threshold * 1.5 : threshold;
+
     // Prefer the dominant axis
     if (Math.abs(dy) > Math.abs(dx)) {
       // vertical drag
@@ -37,13 +44,13 @@ export function useSlideGesture(onNext, onPrev, threshold = 60) {
         // If content is scrollable
         if (scrollHeight - clientHeight > 10) {
           // If swiping up (dragging finger up, scrolling page down)
-          if (dy < -threshold && scrollTop + clientHeight < scrollHeight - 5) {
+          if (dy < -mobileThreshold && scrollTop + clientHeight < scrollHeight - 5) {
             startX.current = null;
             startY.current = null;
             return;
           }
           // If swiping down (dragging finger down, scrolling page up)
-          if (dy > threshold && scrollTop > 5) {
+          if (dy > mobileThreshold && scrollTop > 5) {
             startX.current = null;
             startY.current = null;
             return;
@@ -51,12 +58,13 @@ export function useSlideGesture(onNext, onPrev, threshold = 60) {
         }
       }
 
-      if (dy < -threshold) onNext();
-      else if (dy > threshold) onPrev();
+      // On mobile, only allow slide changes with stronger gestures
+      if (dy < -mobileThreshold) onNext();
+      else if (dy > mobileThreshold) onPrev();
     } else {
       // horizontal drag (swipe left → next, swipe right → prev)
-      if (dx < -threshold) onNext();
-      else if (dx > threshold) onPrev();
+      if (dx < -mobileThreshold) onNext();
+      else if (dx > mobileThreshold) onPrev();
     }
 
     startX.current = null;

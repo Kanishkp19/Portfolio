@@ -68,7 +68,6 @@ body {
   /* Mobile touch improvements */
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
-  touch-action: pan-y;
 }
 
 /* Mobile-specific optimizations */
