@@ -1,0 +1,36 @@
+.skillsStrip {
+  background: var(--c-black);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: var(--sp-lg) 0;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.marquee {
+  width: 100%;
+}
+
+.skItem {
+  font-family: var(--ff-accent);
+  font-size: clamp(28px, 4.5vw, 48px);
+  color: var(--c-white);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+}
+
+.skItem :global(.separator) {
+  margin: 0 var(--sp-md);
+  color: var(--c-purple);
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .skillsStrip {
+    padding: var(--sp-md) 0;
+  }
+}

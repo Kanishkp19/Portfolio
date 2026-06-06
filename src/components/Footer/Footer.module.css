@@ -1,0 +1,36 @@
+.footer {
+  background: var(--c-black);
+  color: rgba(255, 255, 255, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: var(--sp-xl) 0;
+  font-family: var(--ff-body);
+  font-size: var(--fs-xs);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--section-px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.copy {
+  letter-spacing: 0.05em;
+}
+
+.name {
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    gap: var(--sp-sm);
+    text-align: center;
+  }
+}

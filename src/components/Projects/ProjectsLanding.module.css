@@ -1,0 +1,30 @@
+.section {
+  min-height: 55vh;
+  background: var(--grad-split);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 60px var(--section-px);
+}
+
+.inner {
+  text-align: center;
+}
+
+.getStarted {
+  font-size: var(--fs-2xl);
+  letter-spacing: -0.015em;
+  color: var(--c-white);
+  mix-blend-mode: difference;
+  margin-bottom: 12px;
+}
+
+.heading {
+  font-family: var(--ff-display);
+  font-size: clamp(80px, 12vw, 150px);
+  line-height: 1;
+  letter-spacing: -0.015em;
+  color: var(--c-white);
+  mix-blend-mode: difference;
+}

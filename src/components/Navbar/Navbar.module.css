@@ -1,0 +1,330 @@
+.navContainer {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1200px;
+  z-index: 102; /* Sit above slides (101) */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 28px;
+  border-radius: var(--radius-pill);
+  transition: background 0.4s var(--ease-default), 
+              border-color 0.4s var(--ease-default), 
+              box-shadow 0.4s var(--ease-default);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.navDark {
+  background: rgba(42, 45, 39, 0.85);
+  border: 1px solid rgba(225, 224, 204, 0.12);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+  color: var(--color-primary-text);
+}
+
+.navLight {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+  color: var(--c-black);
+}
+
+/* Brand Logo */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--ff-body);
+  font-size: var(--fs-md);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.3s;
+}
+
+.brand:hover {
+  opacity: 0.85;
+}
+
+.logoDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-round);
+  background: var(--color-primary);
+  box-shadow: 0 0 8px var(--color-primary);
+  animation: pulseGlow 2s infinite alternate;
+}
+
+/* Nav Links Centered */
+.linksList {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.linkItem {
+  position: relative;
+}
+
+.link {
+  font-family: var(--ff-body);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 8px 0;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: color 0.3s var(--ease-default), opacity 0.3s var(--ease-default);
+}
+
+.navDark .link {
+  opacity: 0.7;
+  color: var(--color-nav-link);
+}
+
+.navLight .link {
+  opacity: 0.6;
+}
+
+.navDark .link:hover,
+.navDark .linkActive {
+  opacity: 1;
+  color: var(--color-nav-hover);
+}
+
+.navLight .link:hover,
+.navLight .linkActive {
+  opacity: 1;
+  color: var(--c-black);
+}
+
+/* Slide active indicator dot/underline */
+.indicator {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: var(--radius-round);
+  background: var(--color-primary);
+  box-shadow: 0 0 6px var(--color-primary);
+  transition: all 0.3s var(--ease-default);
+}
+
+.navLight .linkActive + .indicator {
+  background: var(--color-primary-text);
+  box-shadow: 0 0 6px var(--color-primary-text);
+}
+
+/* Right Section Actions */
+.rightActions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Social icons */
+.socials {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.socialLink {
+  color: inherit;
+  opacity: 0.65;
+  transition: opacity 0.3s, transform 0.2s, color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.socialLink:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.navDark .socialLink:hover {
+  color: var(--color-primary);
+}
+
+.navLight .socialLink:hover {
+  color: var(--color-primary-text);
+}
+
+/* Highlighted Resume Button */
+.resumeBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-family: var(--ff-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  transition: all 0.3s var(--ease-default);
+}
+
+.navDark .resumeBtn {
+  background: var(--color-primary);
+  color: var(--bg-dark-olive);
+  border: 1px solid var(--color-primary);
+  box-shadow: 0 0 10px rgba(222, 219, 200, 0.15);
+}
+
+.navDark .resumeBtn:hover {
+  background: var(--color-primary-text);
+  color: var(--bg-dark-olive);
+  box-shadow: 0 0 18px rgba(225, 224, 204, 0.45);
+  transform: translateY(-1px);
+}
+
+.navLight .resumeBtn {
+  background: var(--c-black);
+  color: var(--c-white);
+  border: 1px solid var(--c-black);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.navLight .resumeBtn:hover {
+  background: transparent;
+  color: var(--c-black);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Hamburger menu button */
+.menuToggle {
+  display: none;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 6px;
+  z-index: 105;
+  transition: opacity 0.3s;
+}
+
+.menuToggle:hover {
+  opacity: 0.8;
+}
+
+/* Mobile Navigation Panel */
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 104;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 36px;
+  padding: 40px;
+  transition: opacity 0.4s var(--ease-default), visibility 0.4s;
+  opacity: 0;
+  visibility: hidden;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.mobileMenuOpen {
+  opacity: 1;
+  visibility: visible;
+}
+
+.navDark.mobileMenu {
+  background: rgba(42, 45, 39, 0.96);
+}
+
+.navLight.mobileMenu {
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.mobileLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobileLink {
+  font-family: var(--ff-body);
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  text-decoration: none;
+  color: inherit;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: color 0.3s;
+}
+
+.mobileLinkActive {
+  color: var(--color-primary);
+}
+
+.navLight .mobileLinkActive {
+  color: var(--color-primary-text);
+}
+
+.mobileRightActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+/* Keyframes */
+@keyframes pulseGlow {
+  0% {
+    transform: scale(0.9);
+    box-shadow: 0 0 4px var(--color-primary);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.1);
+    box-shadow: 0 0 12px var(--color-primary);
+    opacity: 1;
+  }
+}
+
+/* Responsive Overrides */
+@media (max-width: 900px) {
+  .navContainer {
+    width: 95%;
+    padding: 10px 20px;
+  }
+  .linksList {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .linksList {
+    display: none;
+  }
+  .rightActions {
+    display: none;
+  }
+  .menuToggle {
+    display: block;
+  }
+}

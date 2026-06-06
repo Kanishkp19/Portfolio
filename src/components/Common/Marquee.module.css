@@ -1,0 +1,22 @@
+.track {
+  display: flex;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.track.forward {
+  animation: marqueeScroll var(--marquee-speed, 20s) linear infinite;
+}
+
+.track.reverse {
+  animation: marqueeScroll var(--marquee-speed, 20s) linear infinite reverse;
+}
+
+.item {
+  flex-shrink: 0;
+}
+
+@keyframes marqueeScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}

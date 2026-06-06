@@ -1,0 +1,57 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-family: var(--ff-body);
+  font-size: var(--fs-md);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition:
+    background var(--duration-base),
+    opacity var(--duration-base),
+    transform var(--duration-base);
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button:active {
+  transform: translateY(0);
+}
+
+/* ── Variants ── */
+.outline {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--c-white);
+}
+
+.outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.filled {
+  background: var(--c-white);
+  color: var(--c-black);
+  font-weight: 600;
+}
+
+.filled:hover {
+  opacity: 0.85;
+}
+
+.ghost {
+  background: transparent;
+  color: var(--c-white);
+  padding: 14px 0;
+}
+
+.ghost:hover {
+  opacity: 0.7;
+}
