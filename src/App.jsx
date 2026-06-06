@@ -194,12 +194,21 @@ export default function App() {
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+    
+    // Disable wheel/scroll interception on mobile devices
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) return;
+    
     el.addEventListener('wheel', handleWheel, { passive: false });
     return () => el.removeEventListener('wheel', handleWheel);
   }, [handleWheel]);
 
   /* ── Drag/swipe gestures ── */
   const gestureHandlers = useSlideGesture(goNext, goPrev, 55);
+  
+  // Disable gesture handlers on mobile to allow native scrolling
+  const isMobile = window.innerWidth <= 768;
+  const mobileGestureHandlers = isMobile ? {} : gestureHandlers;
 
   const isDarkSlide = SLIDES[current]?.dark ?? true;
 
@@ -219,7 +228,7 @@ export default function App() {
       <div
         ref={containerRef}
         className={styles.sliderContainer}
-        {...gestureHandlers}
+        {...mobileGestureHandlers}
         aria-label="Portfolio sections"
       >
         <AnimatePresence initial={false} custom={direction} mode="sync">
