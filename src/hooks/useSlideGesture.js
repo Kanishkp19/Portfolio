@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 
 /**
  * useSlideGesture – returns drag/swipe handlers that call onNext / onPrev.
@@ -8,93 +8,210 @@ import { useCallback, useRef } from 'react';
  * @param {number}   threshold  minimum pixel movement to trigger (default 60)
  */
 export function useSlideGesture(onNext, onPrev, threshold = 60) {
+  // All refs declared at the top - don't change the order!
   const startX = useRef(null);
   const startY = useRef(null);
+  const currentX = useRef(null);
+  const currentY = useRef(null);
   const isDragging = useRef(false);
-  const isMobile = useRef(window.innerWidth <= 768);
+  const isMobileDevice = useRef(false);
+  const debugDiv = useRef(null);
 
-  const onPointerDown = useCallback((e) => {
-    // Update mobile detection on each interaction
-    isMobile.current = window.innerWidth <= 768;
+  useEffect(() => {
+    // Detect mobile device
+    isMobileDevice.current = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
     
-    startX.current = e.clientX ?? e.touches?.[0]?.clientX;
-    startY.current = e.clientY ?? e.touches?.[0]?.clientY;
-    isDragging.current = true;
+    // Show debug info on mobile
+    if (isMobileDevice.current && !debugDiv.current) {
+      debugDiv.current = document.createElement('div');
+      debugDiv.current.id = 'gesture-debug';
+      debugDiv.current.style.cssText = `
+        position: fixed;
+        top: 70px;
+        left: 10px;
+        background: rgba(0,0,0,0.9);
+        color: #0f0;
+        padding: 10px;
+        font-family: monospace;
+        font-size: 11px;
+        z-index: 9999;
+        border-radius: 5px;
+        max-width: 250px;
+        word-wrap: break-word;
+        pointer-events: none;
+      `;
+      document.body.appendChild(debugDiv.current);
+    }
+    
+    return () => {
+      if (debugDiv.current && debugDiv.current.parentNode) {
+        debugDiv.current.parentNode.removeChild(debugDiv.current);
+        debugDiv.current = null;
+      }
+    };
   }, []);
 
-  const onPointerUp = useCallback((e) => {
+  const updateDebug = useCallback((message) => {
+    if (debugDiv.current) {
+      debugDiv.current.innerHTML = message;
+    }
+    console.log('[GESTURE]', message.replace(/<br>/g, ' | '));
+  }, []);
+
+  const onTouchStart = useCallback((e) => {
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    
+    startX.current = touch.clientX;
+    startY.current = touch.clientY;
+    currentX.current = touch.clientX;
+    currentY.current = touch.clientY;
+    isDragging.current = true;
+    
+    updateDebug(`✋ START<br>x=${touch.clientX.toFixed(0)}, y=${touch.clientY.toFixed(0)}`);
+  }, [updateDebug]);
+
+  const onTouchMove = useCallback((e) => {
     if (!isDragging.current) return;
+    
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    
+    currentX.current = touch.clientX;
+    currentY.current = touch.clientY;
+    
+    const dx = currentX.current - startX.current;
+    const dy = currentY.current - startY.current;
+    
+    updateDebug(`👆 MOVE<br>dx=${dx.toFixed(0)}, dy=${dy.toFixed(0)}`);
+  }, [updateDebug]);
+
+  const onTouchEnd = useCallback((e) => {
+    if (!isDragging.current) {
+      updateDebug('END: Not dragging');
+      return;
+    }
+
     isDragging.current = false;
+    
+    if (startX.current === null || startY.current === null || currentX.current === null || currentY.current === null) {
+      updateDebug('END: Missing position data');
+      startX.current = null;
+      startY.current = null;
+      currentX.current = null;
+      currentY.current = null;
+      return;
+    }
+    
+    const dx = currentX.current - startX.current;
+    const dy = currentY.current - startY.current;
+    const effectiveThreshold = isMobileDevice.current ? 80 : threshold;
 
-    const endX = e.clientX ?? e.changedTouches?.[0]?.clientX;
-    const endY = e.clientY ?? e.changedTouches?.[0]?.clientY;
-    const dx = endX - startX.current;
-    const dy = endY - startY.current;
+    updateDebug(`🎯 SWIPE<br>dx=${dx.toFixed(0)}, dy=${dy.toFixed(0)}<br>Need: ${effectiveThreshold}px`);
 
-    // On mobile, use higher threshold for section changes
-    const mobileThreshold = isMobile.current ? threshold * 2 : threshold;
-
-    // Prefer the dominant axis
-    if (Math.abs(dy) > Math.abs(dx)) {
-      // vertical drag
+    // Prefer vertical swipes
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 20) {
       const slideEl = e.target?.closest?.('[class*="slide"]');
+      
       if (slideEl) {
         const { scrollTop, scrollHeight, clientHeight } = slideEl;
-        const isScrollable = scrollHeight - clientHeight > 10;
+        const isScrollable = scrollHeight > clientHeight + 20;
+        const atBottom = scrollTop + clientHeight >= scrollHeight - 10;
+        const atTop = scrollTop <= 10;
         
-        // If content is scrollable, check if we're at boundaries
+        updateDebug(`📊 Scroll: ${scrollTop.toFixed(0)}/${scrollHeight.toFixed(0)}<br>Scrollable: ${isScrollable}<br>Top: ${atTop}, Bottom: ${atBottom}<br>dy: ${dy.toFixed(0)}`);
+        
         if (isScrollable) {
-          const atBottom = scrollTop + clientHeight >= scrollHeight - 5;
-          const atTop = scrollTop <= 5;
-          
-          // Swiping up (going to next section) - only if at bottom
-          if (dy < -mobileThreshold && atBottom) {
+          if (dy < -effectiveThreshold && atBottom) {
+            updateDebug('✅ NEXT SECTION!');
             onNext();
-            startX.current = null;
-            startY.current = null;
-            return;
-          }
-          
-          // Swiping down (going to previous section) - only if at top
-          if (dy > mobileThreshold && atTop) {
+          } else if (dy > effectiveThreshold && atTop) {
+            updateDebug('✅ PREV SECTION!');
             onPrev();
-            startX.current = null;
-            startY.current = null;
-            return;
+          } else {
+            updateDebug(`❌ ${!atBottom && dy < 0 ? 'Not at bottom' : ''}${!atTop && dy > 0 ? 'Not at top' : ''}${Math.abs(dy) < effectiveThreshold ? ' Swipe weak' : ''}`);
           }
-          
-          // Otherwise, allow internal scrolling
-          startX.current = null;
-          startY.current = null;
-          return;
+        } else {
+          if (dy < -effectiveThreshold) {
+            updateDebug('✅ NEXT (no scroll)');
+            onNext();
+          } else if (dy > effectiveThreshold) {
+            updateDebug('✅ PREV (no scroll)');
+            onPrev();
+          } else {
+            updateDebug(`❌ Swipe too weak: ${dy.toFixed(0)}px`);
+          }
         }
-        
-        // Not scrollable, allow section change
-        if (dy < -mobileThreshold) onNext();
-        else if (dy > mobileThreshold) onPrev();
-      } else {
-        // No slide element found, use default behavior
-        if (dy < -mobileThreshold) onNext();
-        else if (dy > mobileThreshold) onPrev();
       }
     } else {
-      // horizontal drag (swipe left → next, swipe right → prev)
-      // Only on desktop or for short sections
-      if (!isMobile.current) {
-        if (dx < -threshold) onNext();
-        else if (dx > threshold) onPrev();
-      }
+      updateDebug(`❌ Swipe too small or horizontal`);
     }
 
     startX.current = null;
     startY.current = null;
-  }, [onNext, onPrev, threshold]);
+    currentX.current = null;
+    currentY.current = null;
+  }, [onNext, onPrev, threshold, updateDebug]);
 
-  const onPointerCancel = useCallback(() => {
+  const onTouchCancel = useCallback(() => {
     isDragging.current = false;
     startX.current = null;
     startY.current = null;
+    currentX.current = null;
+    currentY.current = null;
+    updateDebug('🚫 CANCELLED');
+  }, [updateDebug]);
+
+  // For desktop - use pointer events
+  const onPointerDown = useCallback((e) => {
+    if (isMobileDevice.current) return;
+    
+    startX.current = e.clientX;
+    startY.current = e.clientY;
+    isDragging.current = true;
   }, []);
 
-  return { onPointerDown, onPointerUp, onPointerCancel };
+  const onPointerMove = useCallback((e) => {
+    if (isMobileDevice.current || !isDragging.current) return;
+    currentX.current = e.clientX;
+    currentY.current = e.clientY;
+  }, []);
+
+  const onPointerUp = useCallback((e) => {
+    if (isMobileDevice.current) return;
+    if (!isDragging.current) return;
+    
+    isDragging.current = false;
+    
+    if (currentX.current === null || currentY.current === null) {
+      currentX.current = e.clientX;
+      currentY.current = e.clientY;
+    }
+    
+    const dx = currentX.current - startX.current;
+    const dy = currentY.current - startY.current;
+
+    if (Math.abs(dy) > Math.abs(dx)) {
+      if (dy < -threshold) onNext();
+      else if (dy > threshold) onPrev();
+    } else {
+      if (dx < -threshold) onNext();
+      else if (dx > threshold) onPrev();
+    }
+
+    startX.current = null;
+    startY.current = null;
+    currentX.current = null;
+    currentY.current = null;
+  }, [onNext, onPrev, threshold]);
+
+  return { 
+    onPointerDown, 
+    onPointerMove,
+    onPointerUp,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd,
+    onTouchCancel
+  };
 }

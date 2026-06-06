@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Download } from 'lucide-react';
+import { Download, Menu, X } from 'lucide-react';
 import styles from './Hero.module.css';
 import WordsPullUp from '../Common/WordsPullUp';
 
 export default function Hero({ goToSlide, slides }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   // Find slide indices dynamically from the slide registry
   const homeIndex       = slides ? slides.findIndex((s) => s.id === 'hero')              : 0;
   const projectsIndex   = slides ? slides.findIndex((s) => s.id === 'projects-overview'): 1;
@@ -22,6 +24,13 @@ export default function Hero({ goToSlide, slides }) {
   ];
 
   const easeTransition = [0.16, 1, 0.3, 1];
+
+  const handleNavClick = (index) => {
+    if (goToSlide) {
+      goToSlide(index);
+      setIsMobileMenuOpen(false);
+    }
+  };
 
   return (
     <section className={styles.heroSection}>
@@ -56,33 +65,72 @@ export default function Hero({ goToSlide, slides }) {
           {/* Divider */}
           <span className={styles.navDivider} aria-hidden="true" />
 
-          {/* Nav Links */}
-          {navItems.map((item, idx) => (
-            <button
-              key={idx}
-              className={styles.navLink}
-              onClick={() => goToSlide && goToSlide(item.index)}
-              aria-label={`Navigate to ${item.label}`}
-            >
-              {item.label}
-            </button>
-          ))}
+          {/* Nav Links - Desktop only */}
+          <div className={styles.desktopLinks}>
+            {navItems.map((item, idx) => (
+              <button
+                key={idx}
+                className={styles.navLink}
+                onClick={() => handleNavClick(item.index)}
+                aria-label={`Navigate to ${item.label}`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
 
           {/* Divider */}
           <span className={styles.navDivider} aria-hidden="true" />
 
-          {/* Resume button */}
+          {/* Resume button - Desktop */}
           <a
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.resumeBtn}
+            className={`${styles.resumeBtn} ${styles.desktopOnly}`}
             aria-label="Download Resume"
           >
             <span>Resume</span>
             <Download size={12} strokeWidth={2.5} />
           </a>
+
+          {/* Hamburger Menu - Mobile only */}
+          <button
+            className={styles.mobileMenuToggle}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMobileMenuOpen}
+          >
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </nav>
+
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <div className={styles.mobileMenuOverlay}>
+            <div className={styles.mobileMenuContent}>
+              {navItems.map((item, idx) => (
+                <button
+                  key={idx}
+                  className={styles.mobileMenuItem}
+                  onClick={() => handleNavClick(item.index)}
+                >
+                  {item.label}
+                </button>
+              ))}
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.mobileResumeBtn}
+                aria-label="Download Resume"
+              >
+                <span>Resume</span>
+                <Download size={14} strokeWidth={2.5} />
+              </a>
+            </div>
+          </div>
+        )}
 
         {/* ── Hero bottom content grid ── */}
         <div className={styles.heroContentGrid}>

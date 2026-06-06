@@ -214,12 +214,14 @@ export default function App() {
   return (
     <>
       <Cursor />
-      <Navbar
-        currentSlideId={SLIDES[current].id}
-        goToSlide={goTo}
-        isDarkSlide={isDarkSlide}
-        slides={SLIDES}
-      />
+      {SLIDES[current].id !== 'hero' && (
+        <Navbar
+          currentSlideId={SLIDES[current].id}
+          goToSlide={goTo}
+          isDarkSlide={isDarkSlide}
+          slides={SLIDES}
+        />
+      )}
 
       {/* ── Main full-screen slider ── */}
       <div
