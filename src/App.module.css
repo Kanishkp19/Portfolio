@@ -93,12 +93,17 @@
 /* Mobile responsive dots */
 @media (max-width: 768px) {
   .dotsIndicator {
-    right: 16px;
-    gap: 12px;
+    right: 12px;
+    gap: 14px;
   }
   
   .dot {
-    width: 6px;
-    height: 6px;
+    width: 10px;
+    height: 10px;
+    border-width: 2px;
+  }
+  
+  .dotActive {
+    transform: scale(1.4);
   }
 }

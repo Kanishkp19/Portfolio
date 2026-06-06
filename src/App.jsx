@@ -206,29 +206,26 @@ export default function App() {
   /* ── Drag/swipe gestures ── */
   const gestureHandlers = useSlideGesture(goNext, goPrev, 55);
   
-  // Disable gesture handlers on mobile to allow native scrolling
+  // On mobile, enable swipe gestures but with higher threshold for deliberate navigation
   const isMobile = window.innerWidth <= 768;
-  const mobileGestureHandlers = isMobile ? {} : gestureHandlers;
 
   const isDarkSlide = SLIDES[current]?.dark ?? true;
 
   return (
     <>
       <Cursor />
-      {SLIDES[current].id !== 'hero' && (
-        <Navbar
-          currentSlideId={SLIDES[current].id}
-          goToSlide={goTo}
-          isDarkSlide={isDarkSlide}
-          slides={SLIDES}
-        />
-      )}
+      <Navbar
+        currentSlideId={SLIDES[current].id}
+        goToSlide={goTo}
+        isDarkSlide={isDarkSlide}
+        slides={SLIDES}
+      />
 
       {/* ── Main full-screen slider ── */}
       <div
         ref={containerRef}
         className={styles.sliderContainer}
-        {...mobileGestureHandlers}
+        {...gestureHandlers}
         aria-label="Portfolio sections"
       >
         <AnimatePresence initial={false} custom={direction} mode="sync">

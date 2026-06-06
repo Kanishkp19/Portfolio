@@ -31,8 +31,8 @@ export function useSlideGesture(onNext, onPrev, threshold = 60) {
     const dx = endX - startX.current;
     const dy = endY - startY.current;
 
-    // On mobile, require stronger swipe gesture to change slides
-    const mobileThreshold = isMobile.current ? threshold * 1.5 : threshold;
+    // On mobile, use higher threshold for section changes
+    const mobileThreshold = isMobile.current ? threshold * 2 : threshold;
 
     // Prefer the dominant axis
     if (Math.abs(dy) > Math.abs(dx)) {
@@ -40,31 +40,50 @@ export function useSlideGesture(onNext, onPrev, threshold = 60) {
       const slideEl = e.target?.closest?.('[class*="slide"]');
       if (slideEl) {
         const { scrollTop, scrollHeight, clientHeight } = slideEl;
+        const isScrollable = scrollHeight - clientHeight > 10;
         
-        // If content is scrollable
-        if (scrollHeight - clientHeight > 10) {
-          // If swiping up (dragging finger up, scrolling page down)
-          if (dy < -mobileThreshold && scrollTop + clientHeight < scrollHeight - 5) {
+        // If content is scrollable, check if we're at boundaries
+        if (isScrollable) {
+          const atBottom = scrollTop + clientHeight >= scrollHeight - 5;
+          const atTop = scrollTop <= 5;
+          
+          // Swiping up (going to next section) - only if at bottom
+          if (dy < -mobileThreshold && atBottom) {
+            onNext();
             startX.current = null;
             startY.current = null;
             return;
           }
-          // If swiping down (dragging finger down, scrolling page up)
-          if (dy > mobileThreshold && scrollTop > 5) {
+          
+          // Swiping down (going to previous section) - only if at top
+          if (dy > mobileThreshold && atTop) {
+            onPrev();
             startX.current = null;
             startY.current = null;
             return;
           }
+          
+          // Otherwise, allow internal scrolling
+          startX.current = null;
+          startY.current = null;
+          return;
         }
+        
+        // Not scrollable, allow section change
+        if (dy < -mobileThreshold) onNext();
+        else if (dy > mobileThreshold) onPrev();
+      } else {
+        // No slide element found, use default behavior
+        if (dy < -mobileThreshold) onNext();
+        else if (dy > mobileThreshold) onPrev();
       }
-
-      // On mobile, only allow slide changes with stronger gestures
-      if (dy < -mobileThreshold) onNext();
-      else if (dy > mobileThreshold) onPrev();
     } else {
       // horizontal drag (swipe left → next, swipe right → prev)
-      if (dx < -mobileThreshold) onNext();
-      else if (dx > mobileThreshold) onPrev();
+      // Only on desktop or for short sections
+      if (!isMobile.current) {
+        if (dx < -threshold) onNext();
+        else if (dx > threshold) onPrev();
+      }
     }
 
     startX.current = null;
