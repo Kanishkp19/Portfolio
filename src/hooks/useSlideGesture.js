@@ -20,41 +20,10 @@ export function useSlideGesture(onNext, onPrev, threshold = 60) {
   useEffect(() => {
     // Detect mobile device
     isMobileDevice.current = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-    
-    // Show debug info on mobile
-    if (isMobileDevice.current && !debugDiv.current) {
-      debugDiv.current = document.createElement('div');
-      debugDiv.current.id = 'gesture-debug';
-      debugDiv.current.style.cssText = `
-        position: fixed;
-        top: 70px;
-        left: 10px;
-        background: rgba(0,0,0,0.9);
-        color: #0f0;
-        padding: 10px;
-        font-family: monospace;
-        font-size: 11px;
-        z-index: 9999;
-        border-radius: 5px;
-        max-width: 250px;
-        word-wrap: break-word;
-        pointer-events: none;
-      `;
-      document.body.appendChild(debugDiv.current);
-    }
-    
-    return () => {
-      if (debugDiv.current && debugDiv.current.parentNode) {
-        debugDiv.current.parentNode.removeChild(debugDiv.current);
-        debugDiv.current = null;
-      }
-    };
   }, []);
 
   const updateDebug = useCallback((message) => {
-    if (debugDiv.current) {
-      debugDiv.current.innerHTML = message;
-    }
+    // Debug disabled - just console log
     console.log('[GESTURE]', message.replace(/<br>/g, ' | '));
   }, []);
 
